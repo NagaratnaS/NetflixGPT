@@ -62,7 +62,7 @@ const Login = () => {
           className="bg-transparent text-white cursor-pointer"
           onClick={handleSignUp}
         >
-          <p className="underline cursor-pointer">
+          <p className="cursor-pointer">
             {isSignInForm
               ? "New to Netflix? Sign Up Now!!"
               : "Already have an account? Sign In"}
