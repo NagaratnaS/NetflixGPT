@@ -1,5 +1,4 @@
 import Header from "./Header";
-import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { validateData } from "../utils/validate";
 import {
@@ -15,7 +14,6 @@ const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const email = useRef(null);
   const passWord = useRef(null);
   const name = useRef(null);
@@ -39,7 +37,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -71,7 +68,6 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              navigate("/browse");
               // Profile updated!
               // ...
             })
