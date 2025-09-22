@@ -1,12 +1,24 @@
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { validateData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const email = useRef(null);
   const passWord = useRef(null);
+  const name = useRef(null);
 
   const handleSignUp = () => {
     setIsSignInForm(!isSignInForm);
@@ -16,6 +28,66 @@ const Login = () => {
     // Handle button click logic here
     const message = validateData(email.current.value, passWord.current.value);
     setErrorMessage(message);
+    if (message) return;
+    if (isSignInForm) {
+      // Handle sign-in logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        passWord.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          navigate("/browse");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // Handle sign-up logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        passWord.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+              navigate("/browse");
+              // Profile updated!
+              // ...
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+            });
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+          // ..
+        });
+    }
   };
 
   return (
@@ -36,6 +108,7 @@ const Login = () => {
             type="text"
             placeholder="Name"
             className="p-2 m-2 text-slate-950"
+            ref={name}
           />
         )}
         <input
