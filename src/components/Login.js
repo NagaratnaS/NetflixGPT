@@ -88,7 +88,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/0b0dad79-ad4d-42b7-b779-8518da389976/web/IN-en-20250908-TRIFECTA-perspective_0647b106-80e1-4d25-9649-63099752b49a_large.jpg')] overflow-hidden overscroll-none">
       <Header />
       <form
         className="w-3/12 p-12 bg-zinc-400 my-36 mx-auto right-0 left text-white"
