@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO } from "../utils/constants";
+import { toggleGptSearchView } from "../utils/gptSlice";
+import { SUPPORTED_LANGUAGES } from "../utils/constants";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -48,16 +50,37 @@ const Header = () => {
         // An error happened.
       });
   };
+
+  const handleGptSearchClick = () => {
+    // Handle GPT Search button click
+    dispatch(toggleGptSearchView());
+  };
   return (
     <div className="px-8 py-2 bg-gradient-to-b from-black z-10 w-screen flex justify-between absolute">
       <img className="w-44" src={LOGO} alt="Logo" />
       {user && (
-        <button
-          className="p-4 m-4 bg-red-500 text-white cursor-pointer float-right"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button>
+        <div className="flex p-2">
+          <select className="bg-gray-800 text-white p-4 m-4 rounded-lg cursor-pointer">
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.identifier} value={lang.identifier}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
+          <button
+            className="bg-purple-500 text-white p-4 m-4 rounded-lg cursor-pointer"
+            onClick={handleGptSearchClick}
+          >
+            GPT Search
+          </button>
+
+          <button
+            className="p-4 m-4 bg-red-500 text-white cursor-pointer float-right rounded-lg"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
       )}
     </div>
   );
